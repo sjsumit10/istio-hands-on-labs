@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: flask-ping-app
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: flask-ping-app
