@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ping-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-client
+  template:
+    metadata:
+      labels:
+        app: ping-client
+    spec:
+      containers:
+        - name: ping-client
+          image: joshisumit629/flask-ping-app:latest
+          command: ["python", "client.py"]
+          env:
+            - name: PING_HOST
+              value: "ping-svc"
+            - name: PING_PORT
+              value: "8000"
+            - name: PING_INTERVAL
+              value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ping-client-service
+spec:
+  selector:
+    app: ping-client
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
